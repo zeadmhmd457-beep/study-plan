@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>السناني | AL-SINANY - XO</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #101326, #20294a);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* اللوجو */
+.brand {
+  margin-bottom: 25px;
+}
+
+.brand-logo {
+  width: 115px;
+  height: 115px;
+  border: 2px solid #e9c779;
+  border-radius: 50%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #e9c779;
+  box-shadow: 0 0 25px #e9c77935;
+  background: #171d33;
+}
+
+.brand-logo span {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.brand-logo small {
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+
+.brand h2 {
+  color: #e9c779;
+  letter-spacing: 3px;
+  margin-bottom: 5px;
+  font-size: 23px;
+}
+
+.brand p {
+  color: #aab2ca;
+  margin-top: 5px;
+}
+
+/* اللعبة */
+h1 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.status {
+  font-size: 19px;
+  color: #e9c779;
+  margin: 20px 0;
+  min-height: 25px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.cell {
+  aspect-ratio: 1;
+  background: #293452;
+  border: 1px solid #465477;
+  border-radius: 15px;
+  font-size: 55px;
+  font-weight: bold;
+  color: #e9c779;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cell:hover:not(:disabled) {
+  background: #394767;
+  transform: scale(1.03);
+}
+
+.cell:disabled {
+  cursor: default;
+}
+
+.cell.win {
+  background: #52643c;
+  border-color: #e9c779;
+}
+
+.reset {
+  background: #e9c779;
+  color: #17203a;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 30px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.reset:hover {
+  background: #f8d993;
+}
+
+.footer {
+  margin-top: 30px;
+  color: #aab2ca;
+  font-size: 13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="brand">
+    <div class="brand-logo">
+      <span>السناني</span>
+      <small>AL-SINANY</small>
+    </div>
+
+    <h2>AL-SINANY</h2>
+    <p>أهلاً بك في عالم الألعاب</p>
+  </div>
+
+  <h1>لعبة XO</h1>
+
+  <div class="status" id="status">
+    دور اللاعب X
+  </div>
+
+  <div class="board" id="board">
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+  </div>
+
+  <button class="reset" onclick="resetGame()">
+    إعادة اللعب ↻
+  </button>
+
+  <div class="footer">
+    AL-SINANY © 2026
+    <br>
+    جميع الحقوق محفوظة
+  </div>
+
+</div>
+
+<script>
+const cells = document.querySelectorAll(".cell");
+const statusText = document.getElementById("status");
+
+let currentPlayer = "X";
+let gameOver = false;
+
+const winningCombinations = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
+];
+
+cells.forEach((cell, index) => {
+  cell.addEventListener("click", () => {
+
+    if (cell.textContent !== "" || gameOver) {
+      return;
+    }
+
+    cell.textContent = currentPlayer;
+    cell.disabled = true;
+
+    checkWinner();
+
+    if (!gameOver) {
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      statusText.textContent = "دور اللاعب " + currentPlayer;
+    }
+
+  });
+});
+
+function checkWinner() {
+
+  for (let combination of winningCombinations) {
+
+    const [a, b, c] = combination;
+
+    if (
+      cells[a].textContent !== "" &&
+      cells[a].textContent === cells[b].textContent &&
+      cells[a].textContent === cells[c].textContent
+    ) {
+
+      statusText.textContent =
+        "🎉 اللاعب " + currentPlayer + " فاز!";
+
+      cells[a].classList.add("win");
+      cells[b].classList.add("win");
+      cells[c].classList.add("win");
+
+      gameOver = true;
+
+      cells.forEach(cell => cell.disabled = true);
+
+      return;
+    }
+  }
+
+  const isDraw = [...cells].every(
+    cell => cell.textContent !== ""
+  );
+
+  if (isDraw) {
+    statusText.textContent = "🤝 تعادل!";
+    gameOver = true;
+  }
+}
+
+function resetGame() {
+
+  currentPlayer = "X";
+  gameOver = false;
+
+  statusText.textContent = "دور اللاعب X";
+
+  cells.forEach(cell => {
+    cell.textContent = "";
+    cell.disabled = false;
+    cell.classList.remove("win");
+  });
+
+}
+</script>
+
+</body>
+</html>
