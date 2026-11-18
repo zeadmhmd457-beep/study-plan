@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>محفظتي | زياد السناني</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #101827;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 480px;
+  margin: auto;
+}
+
+header {
+  text-align: center;
+  padding: 25px 0;
+}
+
+header h1 { font-size: 27px; }
+
+header p { color: #9ca9bd; }
+
+.card {
+  background: #1d293b;
+  border: 1px solid #34445a;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+h3 { margin-top: 0; }
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: 1px solid #40516a;
+  background: #101827;
+  color: white;
+}
+
+button, .upload {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.preview {
+  height: 180px;
+  border: 2px dashed #50627b;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: #aab7ca;
+}
+
+.preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+footer {
+  text-align: center;
+  color: #718096;
+  padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <h1>محفظتي الشخصية</h1>
+  <p>ZEAD EL-SINANY</p>
+</header>
+
+<div class="card">
+  <h3>👤 بياناتي</h3>
+  <input type="text" placeholder="الاسم">
+  <input type="tel" placeholder="رقم الهاتف">
+  <input type="email" placeholder="البريد الإلكتروني">
+  <input type="text" placeholder="العنوان">
+</div>
+
+<div class="card">
+  <h3>🪪 بطاقة الهوية</h3>
+  <div class="preview" id="preview">
+    معاينة صورة تجريبية
+  </div>
+
+  <label class="upload">
+    اختيار صورة تجريبية
+    <input type="file" accept="image/*"
+    hidden onchange="previewImage(event)">
+  </label>
+</div>
+
+<div class="card">
+  <h3>📁 مستنداتي</h3>
+  <p style="color:#9ca9bd;font-size:13px">
+    مساحة لعرض مستنداتك التجريبية.
+  </p>
+</div>
+
+<footer>
+  ZEAD WALLET © 2026
+  <br><br>
+  زياد السناني
+</footer>
+
+</div>
+
+<script>
+function previewImage(event) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    document.getElementById("preview").innerHTML =
+      `<img src="${e.target.result}" alt="معاينة">`;
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
