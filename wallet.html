@@ -1,1 +1,187 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محفظتي | زياد السناني</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101827;
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+}
+
+.header {
+  text-align: center;
+  padding: 25px 0;
+}
+
+.header h1 {
+  margin-bottom: 5px;
+  font-size: 27px;
+}
+
+.header p {
+  color: #9ca9bd;
+}
+
+.card {
+  background: #1d293b;
+  border: 1px solid #34445a;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 17px;
+}
+
+.section-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.id-image {
+  width: 100%;
+  height: 190px;
+  border: 2px dashed #50627b;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #26364b;
+  color: #aab7ca;
+}
+
+.id-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin-top: 9px;
+  border: 1px solid #40516a;
+  border-radius: 10px;
+  background: #101827;
+  color: white;
+  font-size: 15px;
+}
+
+button, .upload {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  text-align: center;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.info {
+  color: #9ca9bd;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.footer {
+  text-align: center;
+  color: #718096;
+  font-size: 12px;
+  padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>محفظتي الشخصية</h1>
+    <p>ZEAD EL-SINANY</p>
+  </div>
+
+  <div class="card">
+    <div class="section-title">👤 بياناتي الشخصية</div>
+
+    <input type="text" placeholder="الاسم بالكامل">
+
+    <input type="tel" placeholder="رقم الهاتف">
+
+    <input type="text" placeholder="العنوان">
+
+    <input type="email" placeholder="البريد الإلكتروني">
+  </div>
+
+  <div class="card">
+    <div class="section-title">🪪 بطاقة الهوية</div>
+
+    <div class="id-image" id="preview">
+      صورة البطاقة
+    </div>
+
+    <label class="upload">
+      إضافة صورة البطاقة
+      <input type="file" accept="image/*"
+      onchange="showImage(event)" hidden>
+    </label>
+
+    <p class="info">
+      استخدم بيانات تجريبية فقط في النسخة المنشورة.
+      لا ترفع صورة هويتك الحقيقية إلى موقع عام.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="section-title">📁 مستنداتي</div>
+
+    <input type="file" accept="image/*,.pdf">
+    <p class="info">اختيار مستند للمعاينة على جهازك.</p>
+  </div>
+
+  <div class="footer">
+    ZEAD WALLET © 2026
+    <br>
+    زياد السناني
+  </div>
+
+</div>
+
+<script>
+function showImage(event) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    document.getElementById("preview").innerHTML =
+      '<img src="' + e.target.result + '" alt="معاينة">';
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
+
