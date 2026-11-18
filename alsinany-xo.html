@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>السناني | AL-SINANY XO</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ min-height:100vh;
+ background:linear-gradient(145deg,#0b1020,#202b49);
+ color:white;
+ font-family:Arial,sans-serif;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ padding:20px;
+}
+
+.container{width:100%;max-width:400px}
+
+.logo{
+ width:120px;height:120px;
+ border:2px solid #e8c477;
+ border-radius:50%;
+ margin:0 auto 15px;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ color:#e8c477;
+ background:#151c32;
+ box-shadow:0 0 25px #e8c47744;
+}
+
+.logo strong{font-size:27px}
+.logo small{font-size:12px;letter-spacing:2px;margin-top:6px}
+
+.brand{color:#e8c477;font-size:23px;letter-spacing:2px}
+.subtitle{color:#aab4cf;margin-bottom:25px}
+
+h1{font-size:30px}
+
+.status{
+ color:#e8c477;
+ font-size:20px;
+ margin:20px;
+ min-height:24px;
+}
+
+.board{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.cell{
+ background:#293654;
+ border:1px solid #536487;
+ border-radius:15px;
+ aspect-ratio:1;
+ font-size:55px;
+ font-weight:bold;
+ color:#e8c477;
+ cursor:pointer;
+}
+
+.cell:disabled{cursor:default}
+.cell.win{background:#52643c}
+
+.reset{
+ margin-top:22px;
+ padding:14px 30px;
+ border:0;
+ border-radius:12px;
+ background:#e8c477;
+ color:#151c32;
+ font-size:17px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.footer{
+ margin-top:30px;
+ color:#9da9c5;
+ font-size:13px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+ <div class="logo">
+  <strong>السناني</strong>
+  <small>AL-SINANY</small>
+ </div>
+
+ <div class="brand">AL-SINANY</div>
+ <div class="subtitle">عالم الألعاب</div>
+
+ <h1>لعبة XO</h1>
+
+ <div class="status" id="status">دور اللاعب X</div>
+
+ <div class="board">
+  <button class="cell"></button>
+  <button class="cell"></button>
+  <button class="cell"></button>
+  <button class="cell"></button>
+  <button class="cell"></button>
+  <button class="cell"></button>
+  <button class="cell"></button>
+  <button class="cell"></button>
+  <button class="cell"></button>
+ </div>
+
+ <button class="reset" onclick="resetGame()">لعب من جديد ↻</button>
+
+ <div class="footer">
+  AL-SINANY © 2026
+  <br>جميع الحقوق محفوظة
+ </div>
+
+</div>
+
+<script>
+const cells=document.querySelectorAll(".cell");
+const statusText=document.getElementById("status");
+
+let player="X";
+let finished=false;
+
+const wins=[
+ [0,1,2],[3,4,5],[6,7,8],
+ [0,3,6],[1,4,7],[2,5,8],
+ [0,4,8],[2,4,6]
+];
+
+cells.forEach(cell=>{
+ cell.addEventListener("click",()=>{
+  if(cell.textContent!==""||finished)return;
+
+  cell.textContent=player;
+  cell.disabled=true;
+
+  let winner=null;
+
+  for(const line of wins){
+   const [a,b,c]=line;
+
+   if(
+    cells[a].textContent!=="" &&
+    cells[a].textContent===cells[b].textContent &&
+    cells[b].textContent===cells[c].textContent
+   ){
+    winner=player;
+    [a,b,c].forEach(i=>cells[i].classList.add("win"));
+    break;
+   }
+  }
+
+  if(winner){
+   statusText.textContent="🏆 اللاعب "+winner+" فاز!";
+   finished=true;
+   cells.forEach(c=>c.disabled=true);
+  }else if([...cells].every(c=>c.textContent!=="")){
+   statusText.textContent="🤝 انتهت بالتعادل!";
+   finished=true;
+  }else{
+   player=player==="X"?"O":"X";
+   statusText.textContent="دور اللاعب "+player;
+  }
+ });
+});
+
+function resetGame(){
+ player="X";
+ finished=false;
+ statusText.textContent="دور اللاعب X";
+
+ cells.forEach(cell=>{
+  cell.textContent="";
+  cell.disabled=false;
+  cell.classList.remove("win");
+ });
+}
+</script>
+</body>
+</html>
