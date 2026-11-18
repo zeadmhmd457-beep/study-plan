@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>جدول المذاكرة</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial;background:#f3f1ed;margin:0;padding:20px;color:#292929}
+.container{max-width:650px;margin:auto}
+h1{text-align:center;color:#493d32}
+.subtitle{text-align:center;color:#777}
+.days{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px}
+.day{background:white;border:1px solid #ddd;border-radius:12px;padding:15px;cursor:pointer;font-size:17px}
+.day.active{background:#493d32;color:white}
+.panel{background:white;padding:18px;border-radius:15px;margin-top:18px}
+input{width:100%;padding:13px;border:1px solid #ccc;border-radius:9px;font-size:16px;margin:8px 0}
+button{background:#493d32;color:white;border:0;padding:12px 18px;border-radius:9px;font-size:16px;cursor:pointer}
+.task{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #eee}
+.task input{width:20px;margin:0}
+.task.done span{text-decoration:line-through;color:#999}
+.delete{margin-right:auto;background:#eee;color:#333;padding:7px 10px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>📚 جدول المذاكرة</h1>
+<p class="subtitle">خطوة كل يوم تقربك من هدفك</p>
+<div class="days" id="days"></div>
+<div class="panel">
+<h3 id="dayTitle">السبت</h3>
+<input id="taskInput" placeholder="اكتب المادة أو المهمة">
+<button onclick="addTask()">إضافة مهمة +</button>
+<div id="tasks"></div>
+</div>
+</div>
+<script>
+const names=["السبت","الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"];
+let selected=0;
+let data=JSON.parse(localStorage.getItem("studyPlan")||"{}");
+function save(){localStorage.setItem("studyPlan",JSON.stringify(data))}
+function drawDays(){
+document.getElementById("days").innerHTML=names.map((n,i)=>
+`<button class="day ${i===selected?'active':''}" onclick="selectDay(${i})">${n}</button>`).join("");
+}
+function selectDay(i){selected=i;drawDays();drawTasks()}
+function addTask(){
+let input=document.getElementById("taskInput");
+let value=input.value.trim();
+if(!value)return;
+if(!data[selected])data[selected]=[];
+data[selected].push({text:value,done:false});
+input.value="";save();drawTasks();
+}
+function toggleTask(i){
+data[selected][i].done=!data[selected][i].done;save();drawTasks();
+}
+function deleteTask(i){
+data[selected].splice(i,1);save();drawTasks();
+}
+function drawTasks(){
+document.getElementById("dayTitle").textContent=names[selected];
+let list=data[selected]||[];
+document.getElementById("tasks").innerHTML=list.map((t,i)=>
+`<div class="task ${t.done?'done':''}">
+<input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${i})">
+<span>${t.text.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</span>
+<button class="delete" onclick="deleteTask(${i})">حذف</button>
+</div>`).join("");
+}
+drawDays();drawTasks();
+</script>
+</body>
+</html>
